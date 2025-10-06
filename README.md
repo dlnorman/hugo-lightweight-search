@@ -2,7 +2,7 @@
 
 A blazing-fast, self-hosted search engine for Hugo static sites using SQLite FTS5, PHP, and JavaScript. No external dependencies, no tracking, complete control.
 
-🔍 **Live Demo**: [View Documentation](https://example.org/docs/)
+🔍 **Live Demo**: [View Documentation](https://sandbox.darcynorman.net/hugo-lightweight-search/)
 
 ## Features
 
