@@ -1,0 +1,12 @@
+# macOS system files
+.DS_Store
+
+# Hugo build lock file
+.hugo_build_lock
+
+# Claude-related files/folders
+.claude/
+.claude
+
+# Git attributes (optional to ignore, but you can if you want)
+.gitattributes
