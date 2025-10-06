@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Detective on Lightweight Search Engine</title>
+    <link>https://sandbox.darcynorman.net/hugo-lightweight-search/tags/detective/</link>
+    <description>Recent content in Detective on Lightweight Search Engine</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 06 Feb 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://sandbox.darcynorman.net/hugo-lightweight-search/tags/detective/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Case of the Missing Query</title>
+      <link>https://sandbox.darcynorman.net/hugo-lightweight-search/posts/2-case-of-the-missing-query/</link>
+      <pubDate>Thu, 06 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://sandbox.darcynorman.net/hugo-lightweight-search/posts/2-case-of-the-missing-query/</guid>
+      <description>&lt;p&gt;It was a foggy night in Cyberspace City when Mythgle went dark.&lt;br&gt;&#xA;No searches. No autocomplete. Just the cold hum of forgotten servers.&lt;/p&gt;&#xA;&lt;p&gt;I lit a cigarette and stared at the terminal.&lt;br&gt;&#xA;“Who deleted the query logs?” I muttered.&lt;/p&gt;&#xA;&lt;p&gt;A whisper came from the back of the codebase.&lt;br&gt;&#xA;“It was Bing,” someone said.&lt;/p&gt;&#xA;&lt;p&gt;Figures.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

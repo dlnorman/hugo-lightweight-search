@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Recipes on Lightweight Search Engine</title>
+    <link>https://sandbox.darcynorman.net/hugo-lightweight-search/tags/recipes/</link>
+    <description>Recent content in Recipes on Lightweight Search Engine</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 06 Apr 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://sandbox.darcynorman.net/hugo-lightweight-search/tags/recipes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cooking with Mythgle</title>
+      <link>https://sandbox.darcynorman.net/hugo-lightweight-search/posts/4-cooking-with-mythgle/</link>
+      <pubDate>Sun, 06 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>https://sandbox.darcynorman.net/hugo-lightweight-search/posts/4-cooking-with-mythgle/</guid>
+      <description>&lt;p&gt;Welcome back, seekers of flavor! 🍲&lt;/p&gt;&#xA;&lt;p&gt;Today we’re making &lt;strong&gt;Algorithmic Soup&lt;/strong&gt; — the dish that made Mythgle famous in culinary circles and confused in tech ones.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Ingredients:&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;2 terabytes of metadata&lt;/li&gt;&#xA;&lt;li&gt;1 dash of mystery&lt;/li&gt;&#xA;&lt;li&gt;Infinite recursion to taste&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;Directions:&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Search “how to make soup.”&lt;/li&gt;&#xA;&lt;li&gt;Follow &lt;em&gt;the fourth result&lt;/em&gt;, because the first three are sponsored.&lt;/li&gt;&#xA;&lt;li&gt;Serve warm with cookies (browser ones, preferably).&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
+    </item>
+  </channel>
+</rss>

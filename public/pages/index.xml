@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pages on Lightweight Search Engine</title>
+    <link>https://sandbox.darcynorman.net/hugo-lightweight-search/pages/</link>
+    <description>Recent content in Pages on Lightweight Search Engine</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 06 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://sandbox.darcynorman.net/hugo-lightweight-search/pages/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://sandbox.darcynorman.net/hugo-lightweight-search/pages/about/</link>
+      <pubDate>Mon, 06 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://sandbox.darcynorman.net/hugo-lightweight-search/pages/about/</guid>
+      <description>&lt;h1 id=&#34;about-hugo-sqlite-search&#34;&gt;About Hugo SQLite Search&lt;/h1&gt;&#xA;&lt;p&gt;Hugo SQLite Search is an open-source, self-hosted search solution specifically designed for Hugo static sites.&lt;/p&gt;&#xA;&lt;h2 id=&#34;our-mission&#34;&gt;Our Mission&lt;/h2&gt;&#xA;&lt;p&gt;To provide a search solution that is:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Simple&lt;/strong&gt; to integrate into any Hugo site&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Fast&lt;/strong&gt; enough for production use&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Powerful&lt;/strong&gt; with advanced query features&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Self-hosted&lt;/strong&gt; for complete data ownership&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;the-problem&#34;&gt;The Problem&lt;/h2&gt;&#xA;&lt;p&gt;Static sites need search functionality, but most solutions require:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;External services (privacy concerns, costs)&lt;/li&gt;&#xA;&lt;li&gt;Complex JavaScript libraries (large bundle sizes)&lt;/li&gt;&#xA;&lt;li&gt;Client-side indexing (slow initial load)&lt;/li&gt;&#xA;&lt;li&gt;Limited query capabilities&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;our-solution&#34;&gt;Our Solution&lt;/h2&gt;&#xA;&lt;p&gt;Hugo SQLite Search uses a proven tech stack:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Search</title>
+      <link>https://sandbox.darcynorman.net/hugo-lightweight-search/pages/search/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://sandbox.darcynorman.net/hugo-lightweight-search/pages/search/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(hugo)",
+      "Bash(hugo:*)",
+      "Read(//Users/dnorman/Documents/Blog/blog/**)",
+      "Read(//Users/dnorman/Documents/Blog/blog/scripts/**)",
+      "Read(//Users/dnorman/Documents/Blog/blog/static/api/**)",
+      "Bash(chmod:*)",
+      "Bash(cat:*)",
+      "Bash(php:*)",
+      "Bash(python3:*)",
+      "Bash(./build-search.sh:*)",
+      "Bash(curl -s \"http://localhost:8888/api/search.php?q=search\")",
+      "Bash(curl -s \"http://localhost:8888/api/search.php?q=title:sqlite\")",
+      "Bash(sqlite3:*)",
+      "Bash(pkill:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
