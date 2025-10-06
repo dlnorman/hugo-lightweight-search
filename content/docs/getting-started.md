@@ -43,66 +43,49 @@ sqlite3 --version
 
 ## Installation
 
-### Step 1: Copy Files to Your Hugo Site
+### Step 1: Clone or Download the Repository
 
-Copy the following files from this repository to your Hugo site:
+Get the source code from GitHub:
 
 ```bash
-# Required files structure:
-your-hugo-site/
-├── layouts/
-│   ├── _default/
-│   │   └── search-data.json       # JSON output template
-│   └── page/
-│       └── search.html             # Search page template
-├── scripts/
-│   └── build-search-index.php      # Index builder script
-├── static/
-│   └── api/
-│       └── search.php              # Search API endpoint
-├── content/
-│   └── search.md                   # Search page content
-└── build.sh                 # Build automation script
+# Option 1: Clone with git
+git clone https://github.com/dlnorman/hugo-lightweight-search.git
+cd hugo-lightweight-search
+
+# Option 2: Download ZIP
+# Visit https://github.com/dlnorman/hugo-lightweight-search
+# Click "Code" → "Download ZIP" and extract
 ```
 
-#### Create the JSON Output Template
+### Step 2: Copy Files to Your Hugo Site
 
-Create `/layouts/_default/search-data.json`:
+Copy the required files from this repository to your Hugo site:
 
-```go-template
-{{- $pages := where site.RegularPages "Type" "!=" "page" -}}
-{{- $pages = where $pages "Draft" "!=" true -}}
-{{- $pages = where $pages "Params.search" "!=" false -}}
-[
-{{- range $index, $page := $pages -}}
-  {{- if $index }},{{ end }}
-  {
-    "id": {{ $page.File.UniqueID | jsonify }},
-    "title": {{ $page.Title | jsonify }},
-    "url": {{ $page.Permalink | jsonify }},
-    "content": {{ $page.Plain | jsonify }},
-    "summary": {{ $page.Summary | jsonify }},
-    "date": {{ $page.Date.Format "2006-01-02" | jsonify }},
-    "section": {{ $page.Section | jsonify }},
-    "tags": {{ $page.Params.tags | jsonify }},
-    "categories": {{ $page.Params.categories | jsonify }}
-  }
-{{- end -}}
-]
+```bash
+# Navigate to your Hugo site directory
+cd /path/to/your-hugo-site
+
+# Copy the necessary files (adjust paths as needed)
+cp -r /path/to/hugo-lightweight-search/layouts/* layouts/
+cp -r /path/to/hugo-lightweight-search/scripts scripts/
+cp -r /path/to/hugo-lightweight-search/static/api static/
+cp /path/to/hugo-lightweight-search/build.sh .
+cp /path/to/hugo-lightweight-search/content/pages/search.md content/
+
+# Make build script executable
+chmod +x build.sh
 ```
 
-#### Create the Search Page Content
+The copied files include:
 
-Create `/content/search.md`:
+- `layouts/_default/search-data.json` - JSON output template for search data
+- `layouts/page/search.html` - Search page template with UI and JavaScript
+- `scripts/build-search-index.php` - Index builder script
+- `static/api/search.php` - Search API endpoint
+- `content/pages/search.md` or `content/search.md` - Search page content
+- `build.sh` - Build automation script
 
-```markdown
----
-title: "Search"
-layout: "search"
----
-```
-
-### Step 2: Configure Hugo for JSON Output
+### Step 3: Configure Hugo for JSON Output
 
 Add JSON output format to your `hugo.yaml` (or `config.toml`):
 
@@ -123,86 +106,25 @@ outputFormats:
 
 This configures Hugo to generate `/index.json` with your site's searchable content.
 
-### Step 3: Copy PHP Scripts
+### Step 4: Verify File Structure
 
-#### Index Builder Script
+After copying, your Hugo site should have this structure:
 
-Copy `/scripts/build-search-index.php` - this script:
-- Reads Hugo's generated JSON
-- Creates SQLite database with FTS5 tables
-- Populates the search index
-- Optimizes the database
-
-#### Search API
-
-Copy `/static/api/search.php` - this provides:
-- RESTful search endpoint at `/api/search.php`
-- Advanced query parsing (phrases, field searches, date filters)
-- BM25 ranking with relevance scoring
-- Pagination support
-
-### Step 4: Copy Search Page Template
-
-Copy `/layouts/page/search.html` - includes:
-- Search input with live search
-- Section filtering
-- Sort options (relevance, date)
-- JavaScript client for API interaction
-- Advanced search syntax documentation
-
-### Step 5: Create Build Script
-
-Create `/build.sh` at your Hugo root:
-
-```bash
-#!/bin/bash
-
-# Hugo Search Build Script
-# Builds Hugo site and creates SQLite search index
-
-set -e  # Exit on any error
-
-echo "Building Hugo site with search..."
-
-# Build Hugo site
-echo "Building Hugo site..."
-hugo --minify
-
-# Find the generated search data file
-SEARCH_DATA_FILE="public/index.json"
-
-if [ ! -f "$SEARCH_DATA_FILE" ]; then
-    echo "Error: Search data not generated. Check your Hugo configuration."
-    exit 1
-fi
-
-echo "Hugo build complete"
-echo "Found search data: $SEARCH_DATA_FILE"
-
-# Build search database
-echo "Building search database..."
-php scripts/build-search-index.php public/search.db "$SEARCH_DATA_FILE"
-
-echo "Search database created"
-
-# Set proper permissions for web server
-chmod 644 public/search.db
-chmod 755 public/api/search.php
-
-echo "Build complete!"
-echo ""
-echo "Search Engine:"
-echo "   Database: public/search.db"
-echo "   API endpoint: /api/search.php"
-echo "   Search page: /search/"
-echo ""
-echo "Ready to deploy!"
 ```
-
-Make it executable:
-
-```bash
-chmod +x build.sh
+your-hugo-site/
+├── layouts/
+│   ├── _default/
+│   │   └── search-data.json       # JSON output template
+│   └── page/
+│       └── search.html             # Search page template
+├── scripts/
+│   └── build-search-index.php      # Index builder script
+├── static/
+│   └── api/
+│       └── search.php              # Search API endpoint
+├── content/
+│   └── search.md                   # Search page content
+└── build.sh                        # Build automation script
 ```
 
 ## Building the Search Index

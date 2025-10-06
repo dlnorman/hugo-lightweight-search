@@ -18,12 +18,18 @@ A blazing-fast, self-hosted search engine for Hugo static sites using SQLite FTS
 ## Quick Start
 
 ```bash
-# 1. Copy files to your Hugo site
-# 2. Configure Hugo for JSON output (see below)
-# 3. Build your site with search
+# 1. Clone this repository
+git clone https://github.com/dlnorman/hugo-lightweight-search.git
+cd hugo-lightweight-search
+
+# 2. Copy files to your Hugo site (see Installation below)
+
+# 3. Configure Hugo for JSON output (see Installation below)
+
+# 4. Build your site with search
 ./build.sh
 
-# 4. Test locally
+# 5. Test locally
 cd public && php -S localhost:8080
 # Visit http://localhost:8080/search/
 ```
@@ -43,28 +49,33 @@ php -m | grep sqlite3
 
 ## Installation
 
-### 1. Copy Files
+### 1. Clone or Download
 
-Copy these files from this repository to your Hugo site:
+Get the source code:
 
-```
-your-hugo-site/
-├── layouts/
-│   ├── _default/
-│   │   └── search-data.json       # JSON template
-│   └── page/
-│       └── search.html             # Search page
-├── scripts/
-│   └── build-search-index.php      # Index builder
-├── static/
-│   └── api/
-│       └── search.php              # Search API
-├── content/
-│   └── search.md                   # Search page content
-└── build.sh                 # Build script
+```bash
+# Clone the repository
+git clone https://github.com/dlnorman/hugo-lightweight-search.git
+cd hugo-lightweight-search
+
+# Or download and extract the ZIP
+# Then copy the required files to your Hugo site
 ```
 
-### 2. Configure Hugo
+### 2. Copy Files to Your Hugo Site
+
+Copy these files from the repository to your Hugo site:
+
+```bash
+# Required files:
+cp -r layouts/ /path/to/your-hugo-site/
+cp -r scripts/ /path/to/your-hugo-site/
+cp -r static/api/ /path/to/your-hugo-site/static/
+cp content/pages/search.md /path/to/your-hugo-site/content/
+cp build.sh /path/to/your-hugo-site/
+```
+
+### 3. Configure Hugo
 
 Add to your `hugo.yaml` or `config.toml`:
 
@@ -89,7 +100,7 @@ menu:
       weight: 50
 ```
 
-### 3. Build
+### 4. Build
 
 ```bash
 chmod +x build.sh
@@ -102,7 +113,7 @@ This will:
 3. Create `public/search.db` SQLite database with FTS5 index
 4. Set proper permissions
 
-### 4. Deploy
+### 5. Deploy
 
 Upload the `public/` directory to your web server. The search database and API go along with your static HTML.
 
@@ -194,10 +205,12 @@ Typical performance metrics:
 
 ## Documentation
 
-- **[Getting Started](/docs/getting-started/)** - Detailed installation guide
-- **[API Reference](/docs/api-reference/)** - Complete API documentation
-- **[Configuration](/docs/configuration/)** - Customization options
-- **[Examples](/docs/examples/)** - Real-world implementations
+Full documentation is available at the [demo site](https://sandbox.darcynorman.net/hugo-lightweight-search/):
+
+- **[Getting Started](https://sandbox.darcynorman.net/hugo-lightweight-search/docs/getting-started/)** - Detailed installation guide
+- **[API Reference](https://sandbox.darcynorman.net/hugo-lightweight-search/docs/api-reference/)** - Complete API documentation
+- **[Configuration](https://sandbox.darcynorman.net/hugo-lightweight-search/docs/configuration/)** - Customization options
+- **[Examples](https://sandbox.darcynorman.net/hugo-lightweight-search/docs/examples/)** - Real-world implementations
 
 ## Customization
 

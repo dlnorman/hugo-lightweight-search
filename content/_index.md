@@ -42,10 +42,15 @@ Perfect for:
 ## Quick Start
 
 ```bash
-# 1. Copy files to your Hugo site
-# 2. Build your site with search
+# 1. Clone the repository
+git clone https://github.com/dlnorman/hugo-lightweight-search.git
+
+# 2. Copy files to your Hugo site
+
+# 3. Build your site with search
 ./build.sh
-# 3. Deploy and search!
+
+# 4. Deploy and search!
 ```
 
 See our [Getting Started](/docs/getting-started/) guide for full installation instructions.

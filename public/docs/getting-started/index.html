@@ -7,45 +7,26 @@
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#75715e># Check SQLite (optional)</span>
 </span></span><span style=display:flex><span>sqlite3 --version
-</span></span></code></pre></div><h2 id=installation>Installation</h2><h3 id=step-1-copy-files-to-your-hugo-site>Step 1: Copy Files to Your Hugo Site</h3><p>Copy the following files from this repository to your Hugo site:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Required files structure:</span>
-</span></span><span style=display:flex><span>your-hugo-site/
-</span></span><span style=display:flex><span>├── layouts/
-</span></span><span style=display:flex><span>│   ├── _default/
-</span></span><span style=display:flex><span>│   │   └── search-data.json       <span style=color:#75715e># JSON output template</span>
-</span></span><span style=display:flex><span>│   └── page/
-</span></span><span style=display:flex><span>│       └── search.html             <span style=color:#75715e># Search page template</span>
-</span></span><span style=display:flex><span>├── scripts/
-</span></span><span style=display:flex><span>│   └── build-search-index.php      <span style=color:#75715e># Index builder script</span>
-</span></span><span style=display:flex><span>├── static/
-</span></span><span style=display:flex><span>│   └── api/
-</span></span><span style=display:flex><span>│       └── search.php              <span style=color:#75715e># Search API endpoint</span>
-</span></span><span style=display:flex><span>├── content/
-</span></span><span style=display:flex><span>│   └── search.md                   <span style=color:#75715e># Search page content</span>
-</span></span><span style=display:flex><span>└── build.sh                 <span style=color:#75715e># Build automation script</span>
-</span></span></code></pre></div><h4 id=create-the-json-output-template>Create the JSON Output Template</h4><p>Create <code>/layouts/_default/search-data.json</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go-template data-lang=go-template><span style=display:flex><span><span style=color:#75715e>{{-</span> <span style=color:#a6e22e>$pages</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>where</span> <span style=color:#a6e22e>site</span><span style=color:#a6e22e>.RegularPages</span> <span style=color:#e6db74>&#34;Type&#34;</span> <span style=color:#e6db74>&#34;!=&#34;</span> <span style=color:#e6db74>&#34;page&#34;</span> <span style=color:#75715e>-}}</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>{{-</span> <span style=color:#a6e22e>$pages</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>where</span> <span style=color:#a6e22e>$pages</span> <span style=color:#e6db74>&#34;Draft&#34;</span> <span style=color:#e6db74>&#34;!=&#34;</span> <span style=color:#66d9ef>true</span> <span style=color:#75715e>-}}</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>{{-</span> <span style=color:#a6e22e>$pages</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>where</span> <span style=color:#a6e22e>$pages</span> <span style=color:#e6db74>&#34;Params.search&#34;</span> <span style=color:#e6db74>&#34;!=&#34;</span> <span style=color:#66d9ef>false</span> <span style=color:#75715e>-}}</span>
-</span></span><span style=display:flex><span>[
-</span></span><span style=display:flex><span><span style=color:#75715e>{{-</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>$index</span><span style=color:#f92672>,</span> <span style=color:#a6e22e>$page</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>$pages</span> <span style=color:#75715e>-}}</span>
-</span></span><span style=display:flex><span>  <span style=color:#75715e>{{-</span> <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>$index</span> <span style=color:#75715e>}}</span>,<span style=color:#75715e>{{</span> <span style=color:#66d9ef>end</span> <span style=color:#75715e>}}</span>
-</span></span><span style=display:flex><span>  {
-</span></span><span style=display:flex><span>    &#34;id&#34;: <span style=color:#75715e>{{</span> <span style=color:#a6e22e>$page</span><span style=color:#a6e22e>.File.UniqueID</span> <span style=color:#f92672>|</span> <span style=color:#a6e22e>jsonify</span> <span style=color:#75715e>}}</span>,
-</span></span><span style=display:flex><span>    &#34;title&#34;: <span style=color:#75715e>{{</span> <span style=color:#a6e22e>$page</span><span style=color:#a6e22e>.Title</span> <span style=color:#f92672>|</span> <span style=color:#a6e22e>jsonify</span> <span style=color:#75715e>}}</span>,
-</span></span><span style=display:flex><span>    &#34;url&#34;: <span style=color:#75715e>{{</span> <span style=color:#a6e22e>$page</span><span style=color:#a6e22e>.Permalink</span> <span style=color:#f92672>|</span> <span style=color:#a6e22e>jsonify</span> <span style=color:#75715e>}}</span>,
-</span></span><span style=display:flex><span>    &#34;content&#34;: <span style=color:#75715e>{{</span> <span style=color:#a6e22e>$page</span><span style=color:#a6e22e>.Plain</span> <span style=color:#f92672>|</span> <span style=color:#a6e22e>jsonify</span> <span style=color:#75715e>}}</span>,
-</span></span><span style=display:flex><span>    &#34;summary&#34;: <span style=color:#75715e>{{</span> <span style=color:#a6e22e>$page</span><span style=color:#a6e22e>.Summary</span> <span style=color:#f92672>|</span> <span style=color:#a6e22e>jsonify</span> <span style=color:#75715e>}}</span>,
-</span></span><span style=display:flex><span>    &#34;date&#34;: <span style=color:#75715e>{{</span> <span style=color:#a6e22e>$page</span><span style=color:#a6e22e>.Date.Format</span> <span style=color:#e6db74>&#34;2006-01-02&#34;</span> <span style=color:#f92672>|</span> <span style=color:#a6e22e>jsonify</span> <span style=color:#75715e>}}</span>,
-</span></span><span style=display:flex><span>    &#34;section&#34;: <span style=color:#75715e>{{</span> <span style=color:#a6e22e>$page</span><span style=color:#a6e22e>.Section</span> <span style=color:#f92672>|</span> <span style=color:#a6e22e>jsonify</span> <span style=color:#75715e>}}</span>,
-</span></span><span style=display:flex><span>    &#34;tags&#34;: <span style=color:#75715e>{{</span> <span style=color:#a6e22e>$page</span><span style=color:#a6e22e>.Params.tags</span> <span style=color:#f92672>|</span> <span style=color:#a6e22e>jsonify</span> <span style=color:#75715e>}}</span>,
-</span></span><span style=display:flex><span>    &#34;categories&#34;: <span style=color:#75715e>{{</span> <span style=color:#a6e22e>$page</span><span style=color:#a6e22e>.Params.categories</span> <span style=color:#f92672>|</span> <span style=color:#a6e22e>jsonify</span> <span style=color:#75715e>}}</span>
-</span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span><span style=color:#75715e>{{-</span> <span style=color:#66d9ef>end</span> <span style=color:#75715e>-}}</span>
-</span></span><span style=display:flex><span>]
-</span></span></code></pre></div><h4 id=create-the-search-page-content>Create the Search Page Content</h4><p>Create <code>/content/search.md</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
-</span></span><span style=display:flex><span>title: &#34;Search&#34;
-</span></span><span style=display:flex><span>layout: &#34;search&#34;
-</span></span><span style=display:flex><span>---
-</span></span></code></pre></div><h3 id=step-2-configure-hugo-for-json-output>Step 2: Configure Hugo for JSON Output</h3><p>Add JSON output format to your <code>hugo.yaml</code> (or <code>config.toml</code>):</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>outputs</span>:
+</span></span></code></pre></div><h2 id=installation>Installation</h2><h3 id=step-1-clone-or-download-the-repository>Step 1: Clone or Download the Repository</h3><p>Get the source code from GitHub:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Option 1: Clone with git</span>
+</span></span><span style=display:flex><span>git clone https://github.com/dlnorman/hugo-lightweight-search.git
+</span></span><span style=display:flex><span>cd hugo-lightweight-search
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Option 2: Download ZIP</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Visit https://github.com/dlnorman/hugo-lightweight-search</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Click &#34;Code&#34; → &#34;Download ZIP&#34; and extract</span>
+</span></span></code></pre></div><h3 id=step-2-copy-files-to-your-hugo-site>Step 2: Copy Files to Your Hugo Site</h3><p>Copy the required files from this repository to your Hugo site:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Navigate to your Hugo site directory</span>
+</span></span><span style=display:flex><span>cd /path/to/your-hugo-site
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Copy the necessary files (adjust paths as needed)</span>
+</span></span><span style=display:flex><span>cp -r /path/to/hugo-lightweight-search/layouts/* layouts/
+</span></span><span style=display:flex><span>cp -r /path/to/hugo-lightweight-search/scripts scripts/
+</span></span><span style=display:flex><span>cp -r /path/to/hugo-lightweight-search/static/api static/
+</span></span><span style=display:flex><span>cp /path/to/hugo-lightweight-search/build.sh .
+</span></span><span style=display:flex><span>cp /path/to/hugo-lightweight-search/content/pages/search.md content/
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Make build script executable</span>
+</span></span><span style=display:flex><span>chmod +x build.sh
+</span></span></code></pre></div><p>The copied files include:</p><ul><li><code>layouts/_default/search-data.json</code> - JSON output template for search data</li><li><code>layouts/page/search.html</code> - Search page template with UI and JavaScript</li><li><code>scripts/build-search-index.php</code> - Index builder script</li><li><code>static/api/search.php</code> - Search API endpoint</li><li><code>content/pages/search.md</code> or <code>content/search.md</code> - Search page content</li><li><code>build.sh</code> - Build automation script</li></ul><h3 id=step-3-configure-hugo-for-json-output>Step 3: Configure Hugo for JSON Output</h3><p>Add JSON output format to your <code>hugo.yaml</code> (or <code>config.toml</code>):</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>outputs</span>:
 </span></span><span style=display:flex><span>  <span style=color:#f92672>home</span>:
 </span></span><span style=display:flex><span>    - <span style=color:#ae81ff>HTML</span>
 </span></span><span style=display:flex><span>    - <span style=color:#ae81ff>RSS</span>
@@ -57,50 +38,21 @@
 </span></span><span style=display:flex><span>    <span style=color:#f92672>isPlainText</span>: <span style=color:#66d9ef>true</span>
 </span></span><span style=display:flex><span>    <span style=color:#f92672>mediaType</span>: <span style=color:#ae81ff>application/json</span>
 </span></span><span style=display:flex><span>    <span style=color:#f92672>notAlternative</span>: <span style=color:#66d9ef>true</span>
-</span></span></code></pre></div><p>This configures Hugo to generate <code>/index.json</code> with your site&rsquo;s searchable content.</p><h3 id=step-3-copy-php-scripts>Step 3: Copy PHP Scripts</h3><h4 id=index-builder-script>Index Builder Script</h4><p>Copy <code>/scripts/build-search-index.php</code> - this script:</p><ul><li>Reads Hugo&rsquo;s generated JSON</li><li>Creates SQLite database with FTS5 tables</li><li>Populates the search index</li><li>Optimizes the database</li></ul><h4 id=search-api>Search API</h4><p>Copy <code>/static/api/search.php</code> - this provides:</p><ul><li>RESTful search endpoint at <code>/api/search.php</code></li><li>Advanced query parsing (phrases, field searches, date filters)</li><li>BM25 ranking with relevance scoring</li><li>Pagination support</li></ul><h3 id=step-4-copy-search-page-template>Step 4: Copy Search Page Template</h3><p>Copy <code>/layouts/page/search.html</code> - includes:</p><ul><li>Search input with live search</li><li>Section filtering</li><li>Sort options (relevance, date)</li><li>JavaScript client for API interaction</li><li>Advanced search syntax documentation</li></ul><h3 id=step-5-create-build-script>Step 5: Create Build Script</h3><p>Create <code>/build.sh</code> at your Hugo root:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/bin/bash
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Hugo Search Build Script</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Builds Hugo site and creates SQLite search index</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>set -e  <span style=color:#75715e># Exit on any error</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Building Hugo site with search...&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Build Hugo site</span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Building Hugo site...&#34;</span>
-</span></span><span style=display:flex><span>hugo --minify
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Find the generated search data file</span>
-</span></span><span style=display:flex><span>SEARCH_DATA_FILE<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;public/index.json&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> ! -f <span style=color:#e6db74>&#34;</span>$SEARCH_DATA_FILE<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>
-</span></span><span style=display:flex><span>    echo <span style=color:#e6db74>&#34;Error: Search data not generated. Check your Hugo configuration.&#34;</span>
-</span></span><span style=display:flex><span>    exit <span style=color:#ae81ff>1</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Hugo build complete&#34;</span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Found search data: </span>$SEARCH_DATA_FILE<span style=color:#e6db74>&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Build search database</span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Building search database...&#34;</span>
-</span></span><span style=display:flex><span>php scripts/build-search-index.php public/search.db <span style=color:#e6db74>&#34;</span>$SEARCH_DATA_FILE<span style=color:#e6db74>&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Search database created&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Set proper permissions for web server</span>
-</span></span><span style=display:flex><span>chmod <span style=color:#ae81ff>644</span> public/search.db
-</span></span><span style=display:flex><span>chmod <span style=color:#ae81ff>755</span> public/api/search.php
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Build complete!&#34;</span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;&#34;</span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Search Engine:&#34;</span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;   Database: public/search.db&#34;</span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;   API endpoint: /api/search.php&#34;</span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;   Search page: /search/&#34;</span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;&#34;</span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Ready to deploy!&#34;</span>
-</span></span></code></pre></div><p>Make it executable:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>chmod +x build.sh
-</span></span></code></pre></div><h2 id=building-the-search-index>Building the Search Index</h2><h3 id=initial-build>Initial Build</h3><p>Run the build script:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>./build.sh
+</span></span></code></pre></div><p>This configures Hugo to generate <code>/index.json</code> with your site&rsquo;s searchable content.</p><h3 id=step-4-verify-file-structure>Step 4: Verify File Structure</h3><p>After copying, your Hugo site should have this structure:</p><pre tabindex=0><code>your-hugo-site/
+├── layouts/
+│   ├── _default/
+│   │   └── search-data.json       # JSON output template
+│   └── page/
+│       └── search.html             # Search page template
+├── scripts/
+│   └── build-search-index.php      # Index builder script
+├── static/
+│   └── api/
+│       └── search.php              # Search API endpoint
+├── content/
+│   └── search.md                   # Search page content
+└── build.sh                        # Build automation script
+</code></pre><h2 id=building-the-search-index>Building the Search Index</h2><h3 id=initial-build>Initial Build</h3><p>Run the build script:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>./build.sh
 </span></span></code></pre></div><p>This will:</p><ol><li>Build your Hugo site with <code>hugo --minify</code></li><li>Generate <code>/public/index.json</code> with searchable content</li><li>Create <code>/public/search.db</code> SQLite database with FTS5 index</li><li>Set proper file permissions</li></ol><h3 id=manual-build-alternative>Manual Build (Alternative)</h3><p>If you prefer manual steps:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 1. Build Hugo site</span>
 </span></span><span style=display:flex><span>hugo --minify
 </span></span><span style=display:flex><span>

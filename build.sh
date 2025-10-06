@@ -5,8 +5,22 @@
 
 set -e  # Exit on any error
 
-# Set this to whatever you've set publishDir to be in your Hugo config
+# ============================================================================
+# Configuration
+# ============================================================================
+
+# Set this to match the publishDir in your Hugo config (hugo.yaml/config.toml)
+# Default: "public"
+#
+# If you've customized Hugo's output directory with:
+#   publishDir: "dist"
+# or
+#   publishdir = "dist"
+#
+# Then update this variable to match:
 publishDir="public"
+
+# ============================================================================
 
 echo "🏗️  Building Hugo site with search…"
 
@@ -29,8 +43,8 @@ echo "📄 Found search data: $SEARCH_DATA_FILE"
 echo "🔍 Building search database…"
 php scripts/build-search-index.php "$publishDir/search.db" "$SEARCH_DATA_FILE"
 
-# Remove the temporary index.json file - no need to upload that to the server
-# you'll need to modify this to remove index.json from whwrever your publishDir may be set…
+# Remove the temporary index.json file - no need to upload it to the server
+# The SQLite database contains all the search data
 rm "$publishDir/index.json"
 
 echo "✅ Search database created"

@@ -4,6 +4,33 @@ languageCode: en-us
 title: Lightweight Search Engine
 theme: "basic"
 
+# ============================================================================
+# Search Configuration (Required)
+# ============================================================================
+# These settings are required for Hugo Lightweight Search to work properly
+
+# Output formats - JSON is required for search indexing
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON      # Required: generates index.json for search
+
+outputFormats:
+  JSON:
+    baseName: index                    # Creates index.json at site root
+    isPlainText: true
+    mediaType: application/json
+    notAlternative: true
+
+# Optional: Customize the output directory (default: "public")
+# If you change this, also update the publishDir variable in build.sh
+# publishDir: "public"
+
+# ============================================================================
+# Standard Hugo Configuration
+# ============================================================================
+
 enableRobotsTXT: true
 buildDrafts: false
 buildFuture: false
@@ -72,20 +99,7 @@ menu:
       name: About
       url: /pages/about/
       weight: 40
-    - identifier: search
+    - identifier: search      # Recommended: add search to main navigation
       name: Search
       url: /pages/search/
       weight: 50
-
-outputs:
-  home:
-    - HTML
-    - RSS
-    - JSON
-
-outputFormats:
-  JSON:
-    baseName: index
-    isPlainText: true
-    mediaType: application/json
-    notAlternative: true
