@@ -102,6 +102,10 @@ class SearchIndexBuilder {
         $pdo->exec("CREATE INDEX idx_section ON search_content(section)");
         $pdo->exec("CREATE INDEX idx_date ON search_content(date)");
 
+        // Composite index for queries that filter by section AND date together
+        // This is more efficient than using two separate indexes
+        $pdo->exec("CREATE INDEX idx_section_date ON search_content(section, date)");
+
         echo "Database tables created with FTS5 support.\n";
     }
 
@@ -149,7 +153,16 @@ class SearchIndexBuilder {
         // Optimize FTS5 index for better compression and performance
         $pdo->exec("INSERT INTO search_fts(search_fts) VALUES('optimize')");
 
+        // Run ANALYZE to update query planner statistics
+        // This helps SQLite choose the most efficient query execution plans
+        $pdo->exec("ANALYZE");
+
+        // Run VACUUM to reclaim unused space and defragment the database
+        // This reduces file size and improves I/O performance
+        $pdo->exec("VACUUM");
+
         echo "Loaded $count records.\n";
+        echo "Database optimized (ANALYZE + VACUUM completed).\n";
     }
 
     private function getRecordCount($pdo) {

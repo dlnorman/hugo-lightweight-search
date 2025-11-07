@@ -283,16 +283,35 @@ class SearchAPI {
     }
 
     private function escapeFTS5($term) {
-        // Escape special FTS5 characters
-        $term = str_replace('"', '""', $term);
+        // Check if term explicitly ends with * (user wants wildcard search)
+        $userWildcard = substr($term, -1) === '*';
+        if ($userWildcard) {
+            $term = substr($term, 0, -1); // Remove the * temporarily
+        }
 
-        // Support wildcards: if term ends with *, keep it for prefix search
-        if (substr($term, -1) === '*') {
+        // Check if term contains FTS5 special characters that need quoting
+        // FTS5 special chars: " ( ) [ ] : + - ^ * AND OR NOT
+        $needsQuoting = preg_match('/["\(\)\[\]:+\-\^\*]|^(AND|OR|NOT)$/i', $term);
+
+        if ($needsQuoting) {
+            // Escape internal double quotes and wrap in quotes
+            $term = '"' . str_replace('"', '""', $term) . '"';
+
+            // If user explicitly added wildcard, we can't use it with quoted terms
+            // So we return the quoted term without wildcard
             return $term;
         }
 
-        // Add wildcard for fuzzy matching (prefix search)
-        return $term . '*';
+        // For regular terms without special characters
+        // Escape double quotes just in case
+        $term = str_replace('"', '""', $term);
+
+        // Add wildcard for prefix matching (fuzzy search)
+        if ($userWildcard) {
+            return $term . '*'; // User's explicit wildcard
+        } else {
+            return $term . '*'; // Auto-add wildcard for fuzzy matching
+        }
     }
 
     private function highlightTerms($text, $terms) {
