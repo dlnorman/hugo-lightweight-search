@@ -86,6 +86,53 @@
 </div>
 
 <style>
+:root {
+    --bg-color: #ffffff;
+    --text-color: #222222;
+    --text-secondary: #666666;
+    --border-color: #dddddd;
+    --input-bg: #ffffff;
+    --input-border: #dddddd;
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --link-color: #1a73e8;
+    --tag-bg: #f0f0f0;
+    --tag-text: #333333;
+    --highlight-bg: #ffeb3b;
+    --highlight-text: #000000;
+    --help-bg: #f8f9fa;
+    --code-bg: #e9ecef;
+    --code-text: #d63384;
+    --button-text: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --text-color: #e0e0e0;
+        --text-secondary: #a0a0a0;
+        --border-color: #444444;
+        --input-bg: #1e1e1e;
+        --input-border: #444444;
+        --primary-color: #4dabf7;
+        --primary-hover: #339af0;
+        --link-color: #66b0ff;
+        --tag-bg: #333333;
+        --tag-text: #e0e0e0;
+        --highlight-bg: #ffd700;
+        --highlight-text: #000000;
+        --help-bg: #1e1e1e;
+        --code-bg: #2d2d2d;
+        --code-text: #ff79c6;
+        --button-text: #121212;
+    }
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
 .search-container {
     max-width: 800px;
     margin: 0 auto;
@@ -103,40 +150,45 @@
     flex: 1;
     min-width: 300px;
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     font-size: 16px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
 }
 
 #section-filter, #sort-order {
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     min-width: 150px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
 }
 
 #search-button {
     padding: 12px 24px;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--button-text);
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: 500;
 }
 
 #search-button:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-hover);
 }
 
 .loading {
     text-align: center;
     padding: 20px;
-    color: #666;
+    color: var(--text-secondary);
 }
 
 .search-result {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
     padding: 20px 0;
 }
 
@@ -150,7 +202,7 @@
 }
 
 .result-title a {
-    color: #1a73e8;
+    color: var(--link-color);
     text-decoration: none;
 }
 
@@ -159,13 +211,13 @@
 }
 
 .result-meta {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 14px;
     margin-bottom: 10px;
 }
 
 .result-summary {
-    color: #333;
+    color: var(--text-color);
     line-height: 1.5;
 }
 
@@ -174,7 +226,8 @@
 }
 
 .tag {
-    background-color: #f0f0f0;
+    background-color: var(--tag-bg);
+    color: var(--tag-text);
     padding: 3px 8px;
     border-radius: 12px;
     font-size: 12px;
@@ -183,14 +236,15 @@
 }
 
 mark {
-    background-color: #ffeb3b;
+    background-color: var(--highlight-bg);
+    color: var(--highlight-text);
     padding: 0 2px;
     border-radius: 2px;
 }
 
 .search-help {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
+    background-color: var(--help-bg);
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     padding: 15px;
     margin-bottom: 25px;
@@ -200,7 +254,7 @@ mark {
     cursor: pointer;
     font-weight: 600;
     font-size: 16px;
-    color: #495057;
+    color: var(--text-color);
     user-select: none;
     list-style: none;
 }
@@ -220,19 +274,19 @@ mark {
 }
 
 .search-help summary:hover {
-    color: #007bff;
+    color: var(--primary-color);
 }
 
 .search-help-content {
     margin-top: 20px;
     padding-top: 15px;
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid var(--border-color);
 }
 
 .search-help-content h3 {
     margin-top: 0;
     margin-bottom: 20px;
-    color: #212529;
+    color: var(--text-color);
     font-size: 18px;
 }
 
@@ -243,23 +297,23 @@ mark {
 .help-section h4 {
     margin: 0 0 8px 0;
     font-size: 15px;
-    color: #495057;
+    color: var(--text-color);
 }
 
 .help-section code {
     display: inline-block;
-    background-color: #e9ecef;
+    background-color: var(--code-bg);
     padding: 4px 8px;
     border-radius: 3px;
     font-family: 'Courier New', monospace;
     font-size: 14px;
-    color: #d63384;
+    color: var(--code-text);
     margin: 4px 0;
 }
 
 .help-section p {
     margin: 8px 0 0 0;
-    color: #6c757d;
+    color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.5;
 }
@@ -275,7 +329,7 @@ mark {
 }
 
 .help-section li {
-    color: #495057;
+    color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.6;
     margin-bottom: 4px;
@@ -290,14 +344,15 @@ mark {
 
 .pagination button {
     padding: 8px 12px;
-    border: 1px solid #ddd;
-    background: white;
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    color: var(--text-color);
     cursor: pointer;
     border-radius: 4px;
 }
 
 .pagination button:hover:not(:disabled) {
-    background-color: #f5f5f5;
+    background-color: var(--border-color);
 }
 
 .pagination button:disabled {
@@ -306,13 +361,13 @@ mark {
 }
 
 .pagination button.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
+    background-color: var(--primary-color);
+    color: var(--button-text);
+    border-color: var(--primary-color);
 }
 
 .search-stats {
-    color: #666;
+    color: var(--text-secondary);
     margin-bottom: 20px;
     font-size: 14px;
 }
@@ -320,7 +375,7 @@ mark {
 .no-results {
     text-align: center;
     padding: 40px;
-    color: #666;
+    color: var(--text-secondary);
 }
 
 @media (max-width: 768px) {
