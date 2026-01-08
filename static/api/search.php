@@ -165,8 +165,9 @@ class SearchAPI {
 
         // Process results
         foreach ($results as &$result) {
-            $result['tags'] = json_decode($result['tags'] ?? '[]', true) ?: [];
-            $result['categories'] = json_decode($result['categories'] ?? '[]', true) ?: [];
+            // Safely decode tags and categories with error handling
+            $result['tags'] = $this->safeJsonDecode($result['tags'] ?? '[]', $result['title']);
+            $result['categories'] = $this->safeJsonDecode($result['categories'] ?? '[]', $result['title']);
 
             // Highlight search terms in title and summary
             $result['title_highlighted'] = $this->highlightTerms($result['title'], $parsedQuery['terms']);
@@ -206,11 +207,15 @@ class SearchAPI {
 
         // Extract date filters: after:YYYY-MM-DD or before:YYYY-MM-DD
         if (preg_match('/after:(\d{4}-\d{2}-\d{2})/', $query, $matches)) {
-            $result['after'] = $matches[1];
+            if ($this->isValidDate($matches[1])) {
+                $result['after'] = $matches[1];
+            }
             $query = str_replace($matches[0], '', $query);
         }
         if (preg_match('/before:(\d{4}-\d{2}-\d{2})/', $query, $matches)) {
-            $result['before'] = $matches[1];
+            if ($this->isValidDate($matches[1])) {
+                $result['before'] = $matches[1];
+            }
             $query = str_replace($matches[0], '', $query);
         }
 
@@ -345,14 +350,64 @@ class SearchAPI {
         }
     }
 
+    /**
+     * Safely decode JSON with error handling and logging
+     */
+    private function safeJsonDecode($jsonString, $recordTitle = 'Unknown') {
+        if (empty($jsonString)) {
+            return [];
+        }
+
+        $decoded = json_decode($jsonString, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            // Log the error but don't break the search
+            error_log("JSON decode error in record '$recordTitle': " . json_last_error_msg() . " - Data: " . substr($jsonString, 0, 100));
+            return [];
+        }
+
+        return is_array($decoded) ? $decoded : [];
+    }
+
+    /**
+     * Validate date format (YYYY-MM-DD) and ensure it's a real date
+     */
+    private function isValidDate($date) {
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            return false;
+        }
+
+        $parts = explode('-', $date);
+        if (count($parts) !== 3) {
+            return false;
+        }
+
+        // Validate it's an actual date (e.g., not 2024-02-30 or 2024-13-01)
+        return checkdate((int)$parts[1], (int)$parts[2], (int)$parts[0]);
+    }
+
     private function sendResponse($data) {
-        echo json_encode($data, JSON_PRETTY_PRINT);
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            // If JSON encoding fails, send a clear error
+            $this->sendError('Failed to encode response: ' . json_last_error_msg(), 500);
+        }
+
+        echo $json;
         exit;
     }
 
     private function sendError($message, $code = 500) {
         http_response_code($code);
-        echo json_encode(['error' => $message]);
+        $json = json_encode(['error' => $message], JSON_UNESCAPED_UNICODE);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            // Fallback if even error encoding fails
+            echo '{"error":"Critical error: Unable to encode error message"}';
+        } else {
+            echo $json;
+        }
         exit;
     }
 }
