@@ -200,7 +200,7 @@ class SearchIndexBuilder {
         echo "Loaded $count records successfully.\n";
         echo "Database optimized (ANALYZE + VACUUM completed).\n";
 
-        // Verify database integrity
+        // Verify database integrity (including FTS5 index)
         $this->verifyDatabaseIntegrity($pdo);
     }
 
@@ -289,6 +289,14 @@ class SearchIndexBuilder {
         $result = $stmt->fetchColumn();
         if ($result !== 'ok') {
             throw new Exception("Database integrity check failed: $result");
+        }
+
+        // Verify FTS5 index integrity specifically
+        try {
+            $pdo->exec("INSERT INTO search_fts(search_fts) VALUES('integrity-check')");
+            echo "FTS5 index integrity verified.\n";
+        } catch (Exception $e) {
+            throw new Exception("FTS5 index integrity check failed: " . $e->getMessage());
         }
 
         // Test JSON decoding on all tags and categories

@@ -1,6 +1,7 @@
 {{- $pages := where site.RegularPages "Type" "!=" "page" -}}
 {{- $pages = where $pages "Draft" "!=" true -}}
 {{- $pages = where $pages "Params.search" "!=" false -}}
+{{- $pages = where $pages "Params.noindex" "!=" true -}}
 [
 {{- range $index, $page := $pages -}}
   {{- if $index }},{{ end }}

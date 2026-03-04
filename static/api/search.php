@@ -113,9 +113,20 @@ class SearchAPI {
             $countSql .= " AND c.date <= :before";
         }
 
-        $countStmt = $pdo->prepare($countSql);
-        $countStmt->execute($params);
-        $total = intval($countStmt->fetchColumn());
+        try {
+            $countStmt = $pdo->prepare($countSql);
+            $countStmt->execute($params);
+            $total = intval($countStmt->fetchColumn());
+        } catch (Exception $e) {
+            // FTS5 query syntax error — return empty results instead of propagating
+            return [
+                'results' => [],
+                'total' => 0,
+                'page' => $page,
+                'per_page' => $limit,
+                'query' => $query
+            ];
+        }
 
         // Build ORDER BY clause based on sort parameter
         $validSorts = ['relevance', 'date_desc', 'date_asc'];
@@ -160,7 +171,18 @@ class SearchAPI {
             }
         }
 
-        $stmt->execute();
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            // FTS5 query syntax error — return empty results instead of propagating
+            return [
+                'results' => [],
+                'total' => 0,
+                'page' => $page,
+                'per_page' => $limit,
+                'query' => $query
+            ];
+        }
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Process results
@@ -251,12 +273,17 @@ class SearchAPI {
 
         // Add field-specific searches
         foreach ($parsed['field_searches'] as $fs) {
-            $parts[] = "{$fs['field']}:" . $this->escapeFTS5($fs['term']);
+            $escaped = $this->escapeFTS5($fs['term']);
+            if ($escaped !== null) {
+                $parts[] = "{$fs['field']}:" . $escaped;
+            }
         }
 
         // Add phrases (exact match)
         foreach ($parsed['phrases'] as $phrase) {
-            $parts[] = '"' . str_replace('"', '""', $phrase) . '"';
+            if (!empty(trim($phrase))) {
+                $parts[] = '"' . str_replace('"', '""', $phrase) . '"';
+            }
         }
 
         // Add regular terms
@@ -268,13 +295,21 @@ class SearchAPI {
                 // If OR is present, use it between terms
                 $termParts = [];
                 foreach ($parsed['terms'] as $term) {
-                    $termParts[] = $this->escapeFTS5($term);
+                    $escaped = $this->escapeFTS5($term);
+                    if ($escaped !== null) {
+                        $termParts[] = $escaped;
+                    }
                 }
-                $parts[] = '(' . implode(' OR ', $termParts) . ')';
+                if (!empty($termParts)) {
+                    $parts[] = '(' . implode(' OR ', $termParts) . ')';
+                }
             } else {
                 // Default: AND between terms
                 foreach ($parsed['terms'] as $term) {
-                    $parts[] = $this->escapeFTS5($term);
+                    $escaped = $this->escapeFTS5($term);
+                    if ($escaped !== null) {
+                        $parts[] = $escaped;
+                    }
                 }
             }
         }
@@ -292,6 +327,17 @@ class SearchAPI {
         $userWildcard = substr($term, -1) === '*';
         if ($userWildcard) {
             $term = substr($term, 0, -1); // Remove the * temporarily
+        }
+
+        // If term is empty after stripping wildcard, skip it
+        if (empty($term)) {
+            return null;
+        }
+
+        // If term is only special characters with no alphanumeric content, skip it
+        $alphanumericContent = preg_replace('/[^a-zA-Z0-9\x{0080}-\x{FFFF}]/u', '', $term);
+        if (empty($alphanumericContent)) {
+            return null;
         }
 
         // Check if term contains FTS5 special characters that need quoting
@@ -312,11 +358,7 @@ class SearchAPI {
         $term = str_replace('"', '""', $term);
 
         // Add wildcard for prefix matching (fuzzy search)
-        if ($userWildcard) {
-            return $term . '*'; // User's explicit wildcard
-        } else {
-            return $term . '*'; // Auto-add wildcard for fuzzy matching
-        }
+        return $term . '*';
     }
 
     private function highlightTerms($text, $terms) {
