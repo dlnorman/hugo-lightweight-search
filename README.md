@@ -302,6 +302,15 @@ curl "http://localhost:8080/api/search.php?q=test"
 - Check build script output for errors
 - Run manually: `php scripts/build-search-index.php public/search.db public/index.json`
 
+**Search works locally but fails intermittently in production:**
+- Check directory permissions — the search directory must be accessible by the web server user:
+  ```bash
+  ls -la public/
+  # search/ should show drwxr-xr-x (755), not drwx------ (700)
+  chmod 755 public/search/ public/search/api/
+  ```
+- Permissions of `700` allow only the owner to enter the directory, blocking the web server (e.g. `www-data`) from executing `search.php`.
+
 See [Troubleshooting](/docs/getting-started/#troubleshooting) for more solutions.
 
 ## Technology Stack
